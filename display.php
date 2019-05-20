@@ -63,27 +63,35 @@ if(isset($_POST['submit'])){//to run PHP script on submit
             $sql = "SELECT * FROM $all_tables[$i] LIMIT $limit";
             $result = $connection->query($sql);
             if ($result->num_rows > 0) {
-                print "<table>";
+                
                 $increment = 0;
+
+                $all_col_name = [];
+                $all_col = [];
+                $new_row = [];
+
+                print "<table>";
+                print "<tr>";
                 while ($row = $result->fetch_assoc()) {
-                    print "<tr>";
-                            
+                    array_push($new_row, $row);
+                    //var_dump($new_row);
                     foreach ($row as $col_name => $col_value) {
-                        // print "$col_name => $col_value<hr>";
                         if ($increment >= 0 and $increment < count($row)) {
                             print "<th>$col_name</th>";
-                        } else {
-                            print "<td>$col_value</td>";
-                        }
-
-                        if (count($row) == $increment+1) {
-                            print "</tr><tr>";
+                            array_push($all_col_name, $col_name);
                         }
                         $increment++;
                     }
-                }
+                    print "</tr><tr>";
+                    foreach ($row as $cell) {
+                        print "<td>$cell</td>";                        
+                    }
+                }         
+
                 print "</tr>";
                 print "<table>";
+                print "<br><hr><br>";
+
             } else {
                 print "Database: $all_tables[$i] => 0 rows";
             }
